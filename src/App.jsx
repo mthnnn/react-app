@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Main from "./components/Main";
@@ -11,19 +11,24 @@ import MovieList from "./components/MovieList";
 import WatchList from "./components/WatchList";
 
 const api_key = "a7ec0b21c893f41fe706e05e17cd8d75";
+const page = 1;
+const query = "batman";
+const language = "tr-TR";
 
 export default function App() {
   const [movies, setMovies] = useState([]);
   const [watchListMovies, setWatchListMovies] = useState([]);
   const [isWatchListOpen, setIsWatchListOpen] = useState(false);
 
-  fetch(
-    `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=batman&page=2`
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      setMovies(data.results);
-    });
+  useEffect(() => {
+    fetch(
+      `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${query}&page=${page}&language=${language}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setMovies(data.results);
+      });
+  }, []);
 
   function handleAddToWatchList(movie) {
     const isAddedToList = watchListMovies.map((i) => i.id).includes(movie.id);
