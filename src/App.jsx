@@ -10,12 +10,20 @@ import WatchListButton from "./components/WatchListButton";
 import MovieList from "./components/MovieList";
 import WatchList from "./components/WatchList";
 
-import { movie_list } from "./data";
+const api_key = "a7ec0b21c893f41fe706e05e17cd8d75";
 
 export default function App() {
-  const [movies, setMovies] = useState(movie_list);
+  const [movies, setMovies] = useState([]);
   const [watchListMovies, setWatchListMovies] = useState([]);
   const [isWatchListOpen, setIsWatchListOpen] = useState(false);
+
+  fetch(
+    `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=batman&page=2`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      setMovies(data.results);
+    });
 
   function handleAddToWatchList(movie) {
     const isAddedToList = watchListMovies.map((i) => i.id).includes(movie.id);
