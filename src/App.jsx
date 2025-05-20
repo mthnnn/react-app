@@ -63,8 +63,13 @@ export default function App() {
       setLoading(false);
     }
 
+    if (searchQuery.length < 3) {
+      setMovies([]);
+      setError("");
+      return;
+    }
     getMovies();
-  }, []);
+  }, [searchQuery]);
 
   function handleAddToWatchList(movie) {
     const isAddedToList = watchListMovies.map((i) => i.id).includes(movie.id);

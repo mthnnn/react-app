@@ -14,7 +14,7 @@ export default function WatchList({
               <h2 className="title h5 mb-0">Watch List</h2>
             </div>
             <div className="card-body">
-              {movies.filter((m) => m.is_active).length == 0 ? (
+              {movies.length == 0 ? (
                 <div>Film bulunamadı</div>
               ) : (
                 <div
