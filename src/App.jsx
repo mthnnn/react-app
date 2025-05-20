@@ -4,13 +4,14 @@ import Header from "./components/Header";
 import Main from "./components/Main";
 
 import Logo from "./components/Logo";
+import Loading from "./components/Loading";
 import SearchForm from "./components/SearchForm";
 import WatchListButton from "./components/WatchListButton";
 
 import MovieList from "./components/MovieList";
 import WatchList from "./components/WatchList";
 
-const api_key = "a7ec0b21c893f41fe706e05e17cd8d75";
+const api_key = "9394fb08eb73fd225d415dd17bb8eb01";
 const page = 1;
 const query = "batman";
 const language = "tr-TR";
@@ -19,15 +20,21 @@ export default function App() {
   const [movies, setMovies] = useState([]);
   const [watchListMovies, setWatchListMovies] = useState([]);
   const [isWatchListOpen, setIsWatchListOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch(
-      `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${query}&page=${page}&language=${language}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setMovies(data.results);
-      });
+    async function getMovies() {
+      setLoading(true);
+      const response = await fetch(
+        `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${query}&page=${page}&language=${language}`
+      );
+
+      const data = await response.json();
+      setMovies(data.results);
+      setLoading(false);
+    }
+
+    getMovies();
   }, []);
 
   function handleAddToWatchList(movie) {
@@ -59,7 +66,12 @@ export default function App() {
           isWatchListOpen={isWatchListOpen}
           onRemoveFromWatchList={handleRemoveFromWatchList}
         />
-        <MovieList movies={movies} onAddToList={handleAddToWatchList} />
+
+        {loading ? (
+          <Loading />
+        ) : (
+          <MovieList movies={movies} onAddToList={handleAddToWatchList} />
+        )}
       </Main>
       <Footer />
     </>
