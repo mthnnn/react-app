@@ -5,13 +5,14 @@ import Main from "./components/Main";
 
 import Logo from "./components/Logo";
 import Loading from "./components/Loading";
+import ErrorMessage from "./components/ErrorMessage";
 import SearchForm from "./components/SearchForm";
 import WatchListButton from "./components/WatchListButton";
 
 import MovieList from "./components/MovieList";
 import WatchList from "./components/WatchList";
 
-const api_key = "9394fb08eb73fd225d415dd17bb8eb01";
+const api_key = "a7ec0b21c893f41fe706e05e17cd8d75";
 const page = 1;
 const query = "batman";
 const language = "tr-TR";
@@ -21,16 +22,44 @@ export default function App() {
   const [watchListMovies, setWatchListMovies] = useState([]);
   const [isWatchListOpen, setIsWatchListOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [searchQuery, setSearchQuery] = useState(query);
 
   useEffect(() => {
     async function getMovies() {
       setLoading(true);
-      const response = await fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${query}&page=${page}&language=${language}`
-      );
 
-      const data = await response.json();
-      setMovies(data.results);
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${searchQuery}&page=${page}&language=${language}`
+        );
+
+        if (response.status === 404) {
+          throw new Error("Film bulunamadı");
+        } else if (response.status === 401) {
+          throw new Error("API anahtarı hatalı veya geçersiz");
+        } else if (response.status === 500) {
+          throw new Error("Sunucu hatası, lütfen daha sonra tekrar deneyin");
+        } else if (response.status === 503) {
+          throw new Error(
+            "Servis geçici olarak kullanılamıyor, lütfen daha sonra tekrar deneyin"
+          );
+        }
+
+        if (!response.ok) {
+          throw new Error("Hata oluştu");
+        }
+
+        const data = await response.json();
+
+        if (data.results) {
+          setMovies(data.results);
+        }
+        setError("");
+      } catch (error) {
+        setError(error.message);
+      }
+
       setLoading(false);
     }
 
@@ -53,7 +82,7 @@ export default function App() {
     <>
       <Header>
         <Logo />
-        <SearchForm />
+        <SearchForm searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <WatchListButton
           movies={watchListMovies}
           onSetIsWatchListOpen={setIsWatchListOpen}
@@ -67,11 +96,11 @@ export default function App() {
           onRemoveFromWatchList={handleRemoveFromWatchList}
         />
 
-        {loading ? (
-          <Loading />
-        ) : (
+        {loading && <Loading />}
+        {!loading && !error && (
           <MovieList movies={movies} onAddToList={handleAddToWatchList} />
         )}
+        {error && <ErrorMessage message={error} />}
       </Main>
       <Footer />
     </>
