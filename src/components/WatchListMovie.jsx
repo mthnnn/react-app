@@ -8,9 +8,7 @@ export default function WatchListMovie({ movieObj, onRemoveFromWatchList }) {
             alt=""
             className="card-img-top"
           />
-          <div className="card-body">
-            <h2 className="h6 card-title">{movieObj.title}</h2>
-
+          <div>
             <button
               className="btn btn-link fs-5 text-danger position-absolute top-0 start-0"
               onClick={() => onRemoveFromWatchList(movieObj)}
