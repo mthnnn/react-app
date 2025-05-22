@@ -11,6 +11,7 @@ import WatchListButton from "./components/WatchListButton";
 
 import MovieList from "./components/MovieList";
 import WatchList from "./components/WatchList";
+import MovieDetails from "./components/MovieDetails";
 
 const api_key = "a7ec0b21c893f41fe706e05e17cd8d75";
 const page = 1;
@@ -24,6 +25,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState(query);
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   useEffect(() => {
     async function getMovies() {
@@ -33,18 +35,6 @@ export default function App() {
         const response = await fetch(
           `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${searchQuery}&page=${page}&language=${language}`
         );
-
-        if (response.status === 404) {
-          throw new Error("Film bulunamadı");
-        } else if (response.status === 401) {
-          throw new Error("API anahtarı hatalı veya geçersiz");
-        } else if (response.status === 500) {
-          throw new Error("Sunucu hatası, lütfen daha sonra tekrar deneyin");
-        } else if (response.status === 503) {
-          throw new Error(
-            "Servis geçici olarak kullanılamıyor, lütfen daha sonra tekrar deneyin"
-          );
-        }
 
         if (!response.ok) {
           throw new Error("Hata oluştu");
@@ -95,6 +85,13 @@ export default function App() {
       </Header>
 
       <Main>
+        {selectedMovie && (
+          <MovieDetails
+            movieObj={selectedMovie}
+            onClose={() => setSelectedMovie(null)}
+          />
+        )}
+
         <WatchList
           movies={watchListMovies}
           isWatchListOpen={isWatchListOpen}
@@ -103,7 +100,11 @@ export default function App() {
 
         {loading && <Loading />}
         {!loading && !error && (
-          <MovieList movies={movies} onAddToList={handleAddToWatchList} />
+          <MovieList
+            movies={movies}
+            onAddToList={handleAddToWatchList}
+            onSelectMovie={setSelectedMovie}
+          />
         )}
         {error && <ErrorMessage message={error} />}
       </Main>
