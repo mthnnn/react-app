@@ -2,22 +2,29 @@ import React, { useEffect, useState } from "react";
 import Loading from "../components/Loading";
 import ErrorMessage from "../components/ErrorMessage";
 import MovieList from "../components/MovieList";
+import { useSearchParams } from "react-router";
+import Pagination from "../components/Pagination";
 
 const apiUrl = "https://api.themoviedb.org/3";
 const api_key = "9394fb08eb73fd225d415dd17bb8eb01";
-const page = 1;
 const language = "tr-TR";
 
-const Movies = () => {
+const SearchResults = () => {
   const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [totalPages, setTotalPages] = useState(0);
+
+  const query = searchParams.get("q");
+  const page = searchParams.get("page") || 1;
 
   useEffect(() => {
     async function getMovies() {
+      setLoading(true);
       try {
         const response = await fetch(
-          `${apiUrl}/movie/popular?api_key=${api_key}&page=${page}&language=${language}`
+          `${apiUrl}/search/movie?api_key=${api_key}&query=${query}&page=${page}&language=${language}`
         );
 
         if (!response.ok) {
@@ -28,6 +35,7 @@ const Movies = () => {
 
         if (data.results) {
           setMovies(data.results);
+          setTotalPages(data.total_pages);
         }
         setError("");
       } catch (error) {
@@ -38,12 +46,22 @@ const Movies = () => {
     }
 
     getMovies();
-  }, []);
+  }, [searchParams]);
 
   if (loading) return <Loading />;
   if (error) return <ErrorMessage message={error} />;
 
-  return <MovieList movies={movies} title="Popüler Filmler" />;
+  return (
+    <>
+      <MovieList movies={movies} title={`Arama Sonuçları: ${query}`} />
+      <Pagination
+        page={page}
+        setSearchParams={setSearchParams}
+        query={query}
+        totalPages={totalPages}
+      />
+    </>
+  );
 };
 
-export default Movies;
+export default SearchResults;

@@ -8,7 +8,7 @@ const api_key = "9394fb08eb73fd225d415dd17bb8eb01";
 const page = 1;
 const language = "tr-TR";
 
-const Movies = () => {
+const SimilarMovies = ({ movieId }) => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -17,7 +17,7 @@ const Movies = () => {
     async function getMovies() {
       try {
         const response = await fetch(
-          `${apiUrl}/movie/popular?api_key=${api_key}&page=${page}&language=${language}`
+          `${apiUrl}/movie/${movieId}/similar?api_key=${api_key}&page=${page}&language=${language}`
         );
 
         if (!response.ok) {
@@ -38,12 +38,12 @@ const Movies = () => {
     }
 
     getMovies();
-  }, []);
+  }, [movieId]);
 
   if (loading) return <Loading />;
   if (error) return <ErrorMessage message={error} />;
 
-  return <MovieList movies={movies} title="Popüler Filmler" />;
+  return <MovieList movies={movies} title="Benzer Filmler" />;
 };
 
-export default Movies;
+export default SimilarMovies;
