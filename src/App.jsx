@@ -5,6 +5,7 @@ import Movies from "./pages/Movies";
 import MovieDetails from "./pages/MovieDetails";
 import MainLayout from "./layouts/MainLayout";
 import SearchResults from "./pages/SearchResults";
+import UserWatchList from "./pages/UserWatchList";
 
 const routes = createBrowserRouter([
   {
@@ -14,7 +15,8 @@ const routes = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "movies", element: <Movies /> },
       { path: "movies/:id", element: <MovieDetails /> },
-      { path: "search", element: <SearchResults /> }, // search?q=father
+      { path: "search", element: <SearchResults /> },
+      { path: "watchlist", element: <UserWatchList /> },
     ],
   },
 ]);

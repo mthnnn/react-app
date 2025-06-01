@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Loading from "../components/Loading";
 import ErrorMessage from "../components/ErrorMessage";
 import SimilarMovies from "./SimilarMovies";
+import Actors from "../components/Actors";
+import { UserContext } from "../contexts/UserContext";
 
 const apiUrl = "https://api.themoviedb.org/3";
 const api_key = "9394fb08eb73fd225d415dd17bb8eb01";
@@ -14,6 +16,11 @@ const MovieDetails = () => {
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const { addToWatchList, removeFromWatchList, watchList } =
+    useContext(UserContext);
+
+  const isAdded = watchList?.find((i) => i.id == movie?.id);
 
   useEffect(() => {
     async function getMovie() {
@@ -75,10 +82,24 @@ const MovieDetails = () => {
                   {movie.runtime} dk
                 </p>
                 <p>
-                  <span className="badge bg-warning">
+                  <span className="badge bg-warning fs-6">
                     {Math.round(movie.vote_average * 10)}%
                   </span>
+                  <span className="badge bg-danger fs-6 ms-2 pointer">
+                    {isAdded ? (
+                      <i
+                        className="bi bi-heart-fill"
+                        onClick={() => removeFromWatchList(movie)}
+                      ></i>
+                    ) : (
+                      <i
+                        className="bi bi-heart"
+                        onClick={() => addToWatchList(movie)}
+                      ></i>
+                    )}
+                  </span>
                 </p>
+
                 {movie.overview && (
                   <p className="lead">
                     <strong>Özet:</strong> {movie.overview}
@@ -91,11 +112,11 @@ const MovieDetails = () => {
                   </p>
                   <p className="d-flex flex-column text-center">
                     <span> Yönetmen</span>{" "}
-                    <span>{movie.credits.crew[0].name}</span>
+                    <span>{movie.credits.crew[0]?.name}</span>
                   </p>
                   <p className="d-flex flex-column text-center">
                     <span>Senarist</span>{" "}
-                    <span>{movie.credits.crew[1].name}</span>
+                    <span>{movie.credits.crew[1]?.name}</span>
                   </p>
                 </div>
               </div>
@@ -103,32 +124,7 @@ const MovieDetails = () => {
           </div>
         </div>
       </div>
-
-      <div className="container my-3">
-        <div className="card">
-          <div className="card-header">
-            <h5 className="card-title">Kadro</h5>
-          </div>
-          <div className="card-body">
-            <div className="row">
-              {movie.credits.cast.slice(0, 12).map((actor) => (
-                <div className="col-md-2" key={actor.id}>
-                  <img
-                    src={
-                      "https://image.tmdb.org/t/p/original/" +
-                      actor.profile_path
-                    }
-                    alt={actor.name}
-                    className="img-fluid"
-                  />
-                  <p>{actor.name}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
+      <Actors actors={movie.credits.cast} />
       <SimilarMovies movieId={id} />
     </>
   );
