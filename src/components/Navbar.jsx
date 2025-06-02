@@ -15,6 +15,8 @@ export default function Navbar() {
       className={`navbar navbar-expand-lg bg-${theme} border-bottom border-body`}
       data-bs-theme={theme}
     >
+      <ThemeSelector />
+
       <div className="container">
         <Logo />
         <button
@@ -31,13 +33,25 @@ export default function Navbar() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <NavLink className="nav-link active" aria-current="page" to="/">
+              <NavLink className="nav-link" to="/">
                 Home
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/movies">
                 Movies
+              </NavLink>
+            </li>
+          </ul>
+          <ul className="navbar-nav ms-auto">
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/login">
+                Login
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/register">
+                Register
               </NavLink>
             </li>
           </ul>
@@ -51,7 +65,6 @@ export default function Navbar() {
               {watchList.length}
             </span>
           </Link>
-          <ThemeSelector />
         </div>
       </div>
     </nav>
