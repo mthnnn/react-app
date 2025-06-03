@@ -41,6 +41,7 @@ const MovieDetails = () => {
       }
 
       setLoading(false);
+      window.scrollTo(0, 0); // aşağılardan bir filmi seçtiğimizde ilgili detay bilgileri için otomatikmen yukarı kaydırıyoruz
     }
 
     getMovie();

@@ -6,7 +6,7 @@ import MovieDetails from "./pages/MovieDetails";
 import MainLayout from "./layouts/MainLayout";
 import SearchResults from "./pages/SearchResults";
 import UserWatchList from "./pages/UserWatchList";
-import Login from "./pages/Login";
+import Login from "./pages/LoginState";
 import Register from "./pages/Register";
 
 const routes = createBrowserRouter([
