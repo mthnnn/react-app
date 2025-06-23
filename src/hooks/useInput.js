@@ -8,6 +8,7 @@ export default function useInput(initialValue, validationFn) {
   const isValid = validationFn(value); // validation function bize değer getirirse isValid true
 
   function handleInputBlur() {
+    // mevcut alanın focus dışına çıktığında çalışacak fonksiyon
     setIsEdited(true);
   }
 
