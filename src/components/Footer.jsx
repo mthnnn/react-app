@@ -13,28 +13,28 @@ export default function Footer() {
         <section className="mb-4">
           <a
             className={`btn btn-outline-${textColor} btn-floating m-1`}
-            href="#!"
+            href="https://www.facebook.com/gsuendustri/"
             role="button"
           >
             <i className="bi bi-facebook"></i>
           </a>
           <a
             className={`btn btn-outline-${textColor} btn-floating m-1`}
-            href="#!"
+            href="https://x.com/Galatasaray_Uni?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"
             role="button"
           >
             <i className="bi bi-twitter"></i>
           </a>
           <a
             className={`btn btn-outline-${textColor} btn-floating m-1`}
-            href="#!"
+            href="https://gsu.edu.tr/tr"
             role="button"
           >
             <i className="bi bi-google"></i>
           </a>
           <a
             className={`btn btn-outline-${textColor} btn-floating m-1`}
-            href="#!"
+            href="https://www.instagram.com/galatasaray_univ/"
             role="button"
           >
             <i className="bi bi-instagram"></i>
