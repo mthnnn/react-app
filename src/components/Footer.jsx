@@ -43,7 +43,7 @@ export default function Footer() {
       </div>
 
       <div className="text-center p-3">
-        © 2026 Copyright:
+        © 2025 Copyright:
         <a className={`text-${textColor}`} href="#!">
           MtDemiryurek
         </a>
